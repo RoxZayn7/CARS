@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Blinker-style car marketplace with live vehicle APIs, search and price filtering.">
+    <title> Blinker - Browse Cars </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="fonts.googleapis.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="#">
+            <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
+            <span> blinker </span>
+        </a>
+        <button class="menu-toggle" aria-label="Open-menu" aria-expanded="false"> ≣ </button>
+        <nav class="nav" aria-label="Main navigation">
+            <a href="#home"> Home </a>
+            <a href="#cars"> Find your car </a>
+            <a class="contact-btn" href="#contact"> Contact </a>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-car hero-car-one"></div>
+            <div class="hero-car hero-car-two"></div>
+            <div class="hero-content"> 
+                <p class="eyebrow"> YOUR NEXT RIDE STARTS HERE </p>
+                <h1> Browse our cars </h1>
+                <p class="hero-copy"> Search our demo inventory, filter by price, and explore real vehicle data.</p>
+                <form class="search-form" id="searchForm">
+                    <label class="sr-only" for="searchInput"> Search cars </label>
+                    <input id="searchInput" type="search" placeholder="Search make or model, e.g. Toyota" autocomplete="off">
+                    <button type="submit" aria-label="Search"> 🔍︎ </button>
+                    <div class="suggestions" id="suggestions"></div>
+                </form>
+                <div class="api-status" id="apiStatus">
+                    <span class="status-dot"></span>
+                    <span> Loading Vehicle API... </span>
+                </div>
+            </div>
+        </section>
+
+        <section class="inventory" id="cars">
+            <div class="inventory-top">
+                <div>
+                    <p class="section-kicker"> AVAILABLE INVENTORY </p>
+                    <h2 id="resultTitle"> Browse all cars </h2>
+                    <p class="result-count" id="resultCount"> Loading cars... </p>
+                </div>
+                <div class="price-filter">
+                    <div class="price-heading">
+                        <span> Price range </span>
+                        <strong id="priceLabel"> $2,000 to $100,000 </strong>
+                    </div>
+                    <div class="range-wrap">
+                        <input type="range" id="minPrice" min="2000" max="100000" step="1000" value="2000">
+                        <input type="range" id="minPrice" min="2000" max="100000" step="1000" value="100000">
+                    </div>
+                    <div class="range-values"><span>$2,000</span><span>$100,000</span></div>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="chips" id="typeFilters">
+                    <button class="chip active" data-type="all"> All </button>
+                    <button class="chip" data-type="SUV"> SUV </button>
+                    <button class="chip" data-type="Sedan"> Sedan </button>
+                    <button class="chip" data-type="Hatchback"> Hatchback </button>
+                </div>
+                <select id="sortSelect" aria-label="Sort cars">
+                    <option value="featured"> Sort: Featured </option>
+                    <option value="price-low"> Price: Low to High </option>
+                    <option value="price-high"> Price: High to Low </option>
+                    <option value="year-new"> Year: Newest </option>
+                    <option value="mileage-low"> Mileage: Lowest </option>
+                </select>
+                <button class="reset-btn" id="carGrid" id="resetBtn">Reset filters</button>
+            </div>
+            <div class="car-grid" id="carGrid"></div>
+            <div class="empty-state hidden" id="emptyState">
+                <div class="empty-icon"> 🔍︎ </div>
+                <h3> No cars found </h3>
+                <p> Try a different make, model, body type, or price range. </p>
+                <button class="primary-btn" id="emptyReset"> Show all cars </button>
+            </div>
+        </section>
+
+        <section class="api-panel">
+            <div>
+                <p class="section-kicker"> LIVE DATA </p>
+                <h2> Powered by public vehicle APIs</h2>
+                <p> This demo uses a vehicle catalog API for make/model data and a public car-photo endpoint for card imagery. Your search and filters work locally against the inventory while the API supplies live vehicle information. </p>
+            </div>
+            <div class="api-badge">
+                <span> JSON </span>
+                <span> CORS </span>
+                <span> No API key </span>
+            </div>
+        </section>
+
+        <section class="contact-section" id="contact">
+            <div>
+                <p class="section-kicker"> CONTACT </p>
+                <h2> Ready to find your car? </h2>
+                <p> Replace this demo form with your own backend, email service, or CRM endpoint.</p>
+            </div>
+            <form class="contact-btn" id="contactForm">
+                <input type="email" id="email" placeholder="Your email address" required>
+                <button class="primary-btn" type="submit"> Get in touch </button>
+            </form>
+            <p class="form-message" id="formMessage"></p>
+        </section>
+    </main>
+
+    <footer>
+        <span> © 2026 Blinker Demo </span>
+        <a href="#home"> Back to top 👆 </a>
+    </footer>
+
+    <div class="modal hidden" id="carModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-card">
+            <button class="modal-close" id="modalClose" aria-label="Close"> x </button>
+            <img id="modalImage" alt="">
+            <div class="modal-body">
+                <p class="section-kicker"> VEHICLE DETAILS</p>
+                <h2 id="modalTitle"></h2>
+                <div class="modal-specs" id="modalSpecs"></div>
+                <div class="modal-price" id="modalPrice"></div>
+                <button class="primary-btn modal-contact"> I'm interested </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
